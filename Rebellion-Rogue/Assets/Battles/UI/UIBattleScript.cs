@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 public class UIBattleScript : MonoBehaviour
 {
     //AllPins
-    List<VisualElement> PinList = new List<VisualElement>();
+    public List<VisualElement> PinList = new List<VisualElement>();
     //Pin1
     public VisualElement Pin1;
 
