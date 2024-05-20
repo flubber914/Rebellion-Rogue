@@ -10,6 +10,11 @@ public class CharacterScript : MonoBehaviour
     VisualElement Pin;
     NavMeshAgent agent;
     Animator anim;
+    public float range;
+
+    //attack stats
+    bool attacking = false;
+    public float attackSpeed;
     // Start is called before the first frame update
     void Start()
     {
@@ -18,6 +23,21 @@ public class CharacterScript : MonoBehaviour
     }
 
     private void FixedUpdate()
+    {
+        Debug.DrawLine(transform.position, transform.position + (transform.forward * range));
+        Movement();
+        if (!attacking)
+        {
+            StartCoroutine(AttackCheckRoutine());
+        }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.DrawWireSphere(transform.position, range);
+    }
+
+    void Movement()
     {
         if (Pin != null)
         {
@@ -34,9 +54,29 @@ public class CharacterScript : MonoBehaviour
         }
     }
 
+    void Attack()
+    {
+        RaycastHit hit;
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, range, 1 << 3);
+
+        foreach (var hitCollider in hitColliders)
+        {
+
+            print(hitCollider.name);
+        }
+        print("///////////");
+    }
+
     public void AssignPin(int _Pin)
     {
-        print(UI.PinList[_Pin]);
         Pin = UI.PinList[_Pin];
+    }
+
+    IEnumerator AttackCheckRoutine()
+    {
+        attacking = true;
+        yield return new WaitForSeconds(attackSpeed);
+        Attack();
+        attacking = false;
     }
 }
